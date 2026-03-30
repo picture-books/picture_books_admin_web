@@ -1,5 +1,1 @@
-
-
-
-
-export {oxlintConfig as default} from "@vben/oxlint-config";
+export { oxlintConfig as default } from "@vben/oxlint-config";
