@@ -1,14 +1,14 @@
-import { requestClient } from "#/api/request";
-
 import type { AdminBook, PageData } from "#/api/types";
 
+import { requestClient } from "#/api/request";
+
 export function getAdminBookListApi(params: {
+  author_id?: number;
+  order_by?: string;
   page?: number;
   page_size?: number;
-  order_by?: string;
   sort_by?: string;
   status?: number;
-  author_id?: number;
   title?: string;
 }) {
   return requestClient.get<PageData<AdminBook>>("/books", { params });

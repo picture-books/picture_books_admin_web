@@ -1,8 +1,8 @@
 import { defineConfig } from "@vben/vite-config";
 
 import ElementPlus from "unplugin-element-plus/vite";
-import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import Components from "unplugin-vue-components/vite";
 
 export default defineConfig(async () => {
   return {

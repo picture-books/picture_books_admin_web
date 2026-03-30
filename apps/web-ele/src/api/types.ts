@@ -11,7 +11,7 @@ export interface AppUserListItem {
   nickname: string;
   avatar: string;
   status: number;
-  max_devices_override?: number | null;
+  max_devices_override?: null | number;
   phone_mask?: string;
   created_at: string;
 }
@@ -63,7 +63,7 @@ export interface AdminPermission {
   name: string;
   kind: string;
   description: string;
-  parent_id?: number | null;
+  parent_id?: null | number;
   sort_order: number;
   created_at: string;
   updated_at: string;
@@ -76,14 +76,14 @@ export interface AdminBook {
   description: string;
   cover_image: string;
   author_id: number;
-  book_gen_task_id?: number | null;
+  book_gen_task_id?: null | number;
   age_group: string;
   theme: string;
   experience_mode: number;
   status: number;
   created_at: string;
   updated_at: string;
-  author?: { id: number; nickname: string; avatar: string };
+  author?: { avatar: string; id: number; nickname: string; };
   pages?: AdminBookPage[];
 }
 
@@ -105,15 +105,15 @@ export interface BookGenTask {
   user_id: number;
   status: number;
   progress: number;
-  request_params?: Record<string, unknown> | null;
-  story_script?: Record<string, unknown> | null;
-  page_images?: Record<string, unknown> | null;
-  book_id?: number | null;
+  request_params?: null | Record<string, unknown>;
+  story_script?: null | Record<string, unknown>;
+  page_images?: null | Record<string, unknown>;
+  book_id?: null | number;
   error_message: string;
-  started_at?: string | null;
-  completed_at?: string | null;
+  started_at?: null | string;
+  completed_at?: null | string;
   created_at: string;
   updated_at: string;
-  user?: { id: number; nickname: string; avatar: string };
+  user?: { avatar: string; id: number; nickname: string; };
   book?: AdminBook;
 }

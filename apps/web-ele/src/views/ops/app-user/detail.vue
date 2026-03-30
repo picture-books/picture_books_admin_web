@@ -3,11 +3,12 @@ import type { AppUserDetailItem } from "#/api/types";
 
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+
 import { useAccessStore } from "@vben/stores";
 
-import { getAppUserDetailApi, patchAppUserDevicePolicyApi, patchAppUserStatusApi } from "#/api";
-
 import { ElMessage, ElMessageBox } from "element-plus";
+
+import { getAppUserDetailApi, patchAppUserDevicePolicyApi, patchAppUserStatusApi } from "#/api";
 
 const route = useRoute();
 const router = useRouter();
@@ -42,8 +43,8 @@ async function toggleStatus() {
     await patchAppUserStatusApi(user.value.id, next);
     ElMessage.success("已更新");
     await load();
-  } catch (e) {
-    if (e !== "cancel") ElMessage.error("操作失败");
+  } catch (error) {
+    if (error !== "cancel") ElMessage.error("操作失败");
   }
 }
 
@@ -85,9 +86,11 @@ watch(
         <el-descriptions-item label="ID">{{ user.id }}</el-descriptions-item>
         <el-descriptions-item label="昵称">{{ user.nickname }}</el-descriptions-item>
         <el-descriptions-item label="手机">{{ user.phone_mask || "-" }}</el-descriptions-item>
-        <el-descriptions-item label="状态">{{
+        <el-descriptions-item label="状态">
+{{
           user.status === 1 ? "正常" : "禁用"
-        }}</el-descriptions-item>
+        }}
+</el-descriptions-item>
         <el-descriptions-item label="设备上限覆盖">
           {{ user.max_devices_override ?? "跟随系统默认" }}
         </el-descriptions-item>

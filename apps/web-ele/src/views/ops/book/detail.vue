@@ -4,9 +4,9 @@ import type { AdminBook } from "#/api/types";
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import { getAdminBookDetailApi } from "#/api";
-
 import { ElMessage } from "element-plus";
+
+import { getAdminBookDetailApi } from "#/api";
 
 const route = useRoute();
 const router = useRouter();
@@ -42,17 +42,23 @@ watch(
           <el-descriptions-item label="ID">{{ book.id }}</el-descriptions-item>
           <el-descriptions-item label="标题">{{ book.title }}</el-descriptions-item>
           <el-descriptions-item label="状态">{{ book.status }}</el-descriptions-item>
-          <el-descriptions-item label="作者">{{
+          <el-descriptions-item label="作者">
+{{
             book.author?.nickname ?? book.author_id
-          }}</el-descriptions-item>
+          }}
+</el-descriptions-item>
           <el-descriptions-item label="体验模式">{{ book.experience_mode }}</el-descriptions-item>
           <el-descriptions-item label="年龄段">{{ book.age_group || "-" }}</el-descriptions-item>
-          <el-descriptions-item label="主题" :span="2">{{
+          <el-descriptions-item label="主题" :span="2">
+{{
             book.theme || "-"
-          }}</el-descriptions-item>
-          <el-descriptions-item label="简介" :span="2">{{
+          }}
+</el-descriptions-item>
+          <el-descriptions-item label="简介" :span="2">
+{{
             book.description || "-"
-          }}</el-descriptions-item>
+          }}
+</el-descriptions-item>
           <el-descriptions-item label="封面" :span="2">
             <el-image
               v-if="book.cover_image"

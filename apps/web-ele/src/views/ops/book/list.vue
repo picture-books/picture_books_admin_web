@@ -4,6 +4,8 @@ import type { AdminBook } from "#/api/types";
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
+import { ElMessage, ElMessageBox } from "element-plus";
+
 import {
   approveAdminBookApi,
   deleteAdminBookApi,
@@ -11,8 +13,6 @@ import {
   rejectAdminBookApi,
   unpublishAdminBookApi,
 } from "#/api";
-
-import { ElMessage, ElMessageBox } from "element-plus";
 
 const router = useRouter();
 const loading = ref(false);
@@ -95,8 +95,8 @@ async function doDelete(row: AdminBook) {
     await deleteAdminBookApi(row.id);
     ElMessage.success("已删除");
     fetchList();
-  } catch (e) {
-    if (e !== "cancel") ElMessage.error("删除失败");
+  } catch (error) {
+    if (error !== "cancel") ElMessage.error("删除失败");
   }
 }
 

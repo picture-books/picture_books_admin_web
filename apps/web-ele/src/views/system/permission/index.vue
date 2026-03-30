@@ -3,9 +3,9 @@ import type { AdminPermission } from "#/api/types";
 
 import { onMounted, ref } from "vue";
 
-import { getAdminPermissionListApi } from "#/api";
-
 import { ElMessage } from "element-plus";
+
+import { getAdminPermissionListApi } from "#/api";
 
 const loading = ref(false);
 const rows = ref<AdminPermission[]>([]);

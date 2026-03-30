@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 
-import { getDevicePolicyApi, updateDevicePolicyApi } from "#/api";
-
 import { ElMessage } from "element-plus";
+
+import { getDevicePolicyApi, updateDevicePolicyApi } from "#/api";
 
 const loading = ref(false);
 const saving = ref(false);

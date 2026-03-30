@@ -4,9 +4,9 @@ import type { BookGenTask } from "#/api/types";
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { getBookGenTaskListApi } from "#/api";
-
 import { ElMessage } from "element-plus";
+
+import { getBookGenTaskListApi } from "#/api";
 
 const router = useRouter();
 const loading = ref(false);

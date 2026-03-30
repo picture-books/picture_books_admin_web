@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-
-import { getAdminStatsApi } from "#/api";
 import type { AdminStats } from "#/api/types";
 
+import { onMounted, ref } from "vue";
+
 import { ElMessage } from "element-plus";
+
+import { getAdminStatsApi } from "#/api";
 
 const loading = ref(false);
 const stats = ref<AdminStats | null>(null);

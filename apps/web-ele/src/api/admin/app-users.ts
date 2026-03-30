@@ -1,6 +1,6 @@
-import { requestClient } from "#/api/request";
-
 import type { AppUserDetailItem, AppUserListItem, PageData } from "#/api/types";
+
+import { requestClient } from "#/api/request";
 
 export function getAppUserListApi(params: { page?: number; page_size?: number }) {
   return requestClient.get<PageData<AppUserListItem>>("/app-users", { params });
@@ -17,7 +17,7 @@ export function patchAppUserStatusApi(id: number, status: number) {
   });
 }
 
-export function patchAppUserDevicePolicyApi(id: number, max_devices_override?: number | null) {
+export function patchAppUserDevicePolicyApi(id: number, max_devices_override?: null | number) {
   return requestClient.request(`/app-users/${id}/device-policy`, {
     data: { max_devices_override },
     method: "PATCH",

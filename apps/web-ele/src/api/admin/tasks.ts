@@ -1,12 +1,12 @@
-import { requestClient } from "#/api/request";
-
 import type { BookGenTask, PageData } from "#/api/types";
+
+import { requestClient } from "#/api/request";
 
 export function getBookGenTaskListApi(params: {
   page?: number;
   page_size?: number;
-  user_id?: number;
   status?: number;
+  user_id?: number;
 }) {
   return requestClient.get<PageData<BookGenTask>>("/book-gen-tasks", {
     params,

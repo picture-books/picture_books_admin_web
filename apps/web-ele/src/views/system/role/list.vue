@@ -3,6 +3,8 @@ import type { AdminPermission, AdminRole } from "#/api/types";
 
 import { onMounted, reactive, ref } from "vue";
 
+import { ElMessage, ElMessageBox } from "element-plus";
+
 import {
   createAdminRoleApi,
   deleteAdminRoleApi,
@@ -12,14 +14,12 @@ import {
   updateAdminRoleApi,
 } from "#/api";
 
-import { ElMessage, ElMessageBox } from "element-plus";
-
 const loading = ref(false);
 const rows = ref<AdminRole[]>([]);
 
 const dialogVisible = ref(false);
 const dialogSaving = ref(false);
-const editingId = ref<number | null>(null);
+const editingId = ref<null | number>(null);
 const permOptions = ref<AdminPermission[]>([]);
 
 const form = reactive({
@@ -120,8 +120,8 @@ async function remove(row: AdminRole) {
     await deleteAdminRoleApi(row.id);
     ElMessage.success("已删除");
     fetchList();
-  } catch (e) {
-    if (e !== "cancel") ElMessage.error("删除失败");
+  } catch (error) {
+    if (error !== "cancel") ElMessage.error("删除失败");
   }
 }
 

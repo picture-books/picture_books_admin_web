@@ -1,5 +1,3 @@
-import { requestClient } from "#/api/request";
-
 import type {
   AdminPermission,
   AdminRole,
@@ -8,6 +6,8 @@ import type {
   DevicePolicy,
   PageData,
 } from "#/api/types";
+
+import { requestClient } from "#/api/request";
 
 export function getAdminUserListApi(params: { page?: number; page_size?: number }) {
   return requestClient.get<PageData<AdminUserRow>>("/system/admin-users", {
@@ -20,10 +20,10 @@ export function getAdminUserDetailApi(id: number) {
 }
 
 export function createAdminUserApi(body: {
-  username: string;
   password: string;
   real_name?: string;
   role_ids?: number[];
+  username: string;
 }) {
   return requestClient.post("/system/admin-users", body);
 }
@@ -31,10 +31,10 @@ export function createAdminUserApi(body: {
 export function updateAdminUserApi(
   id: number,
   body: {
-    real_name?: string;
-    status?: number;
-    role_ids?: number[];
     new_password?: string;
+    real_name?: string;
+    role_ids?: number[];
+    status?: number;
   },
 ) {
   return requestClient.put(`/system/admin-users/${id}`, body);
@@ -54,8 +54,8 @@ export function getAdminRoleDetailApi(id: number) {
 
 export function createAdminRoleApi(body: {
   code: string;
-  name: string;
   description?: string;
+  name: string;
   permission_ids?: number[];
 }) {
   return requestClient.post("/system/roles", body);
@@ -64,8 +64,8 @@ export function createAdminRoleApi(body: {
 export function updateAdminRoleApi(
   id: number,
   body: {
-    name: string;
     description?: string;
+    name: string;
     permission_ids?: number[];
   },
 ) {

@@ -3,11 +3,12 @@ import type { AppUserListItem } from "#/api/types";
 
 import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+
 import { useAccessStore } from "@vben/stores";
 
-import { getAppUserListApi, getDevicePolicyApi, patchAppUserDevicePolicyApi } from "#/api";
-
 import { ElMessage } from "element-plus";
+
+import { getAppUserListApi, getDevicePolicyApi, patchAppUserDevicePolicyApi } from "#/api";
 
 const router = useRouter();
 const accessStore = useAccessStore();
@@ -21,7 +22,7 @@ const maxDevicesDefault = ref(3);
 const policyDialogVisible = ref(false);
 const policySaving = ref(false);
 const editingUser = ref<AppUserListItem | null>(null);
-const policyValue = ref<number | null>(null);
+const policyValue = ref<null | number>(null);
 
 function policyText(row: AppUserListItem) {
   const override = row.max_devices_override;
