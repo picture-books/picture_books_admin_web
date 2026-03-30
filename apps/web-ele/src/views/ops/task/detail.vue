@@ -44,10 +44,8 @@ watch(
         <el-descriptions-item label="进度">{{ task.progress }}</el-descriptions-item>
         <el-descriptions-item label="Book ID">{{ task.book_id ?? "-" }}</el-descriptions-item>
         <el-descriptions-item label="错误信息" :span="2">
-{{
-          task.error_message || "-"
-        }}
-</el-descriptions-item>
+          {{ task.error_message || "-" }}
+        </el-descriptions-item>
         <el-descriptions-item label="请求参数" :span="2">
           <pre class="max-h-48 overflow-auto text-xs whitespace-pre-wrap">{{
             JSON.stringify(task.request_params ?? {}, null, 2)

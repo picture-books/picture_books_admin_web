@@ -83,7 +83,7 @@ export interface AdminBook {
   status: number;
   created_at: string;
   updated_at: string;
-  author?: { avatar: string; id: number; nickname: string; };
+  author?: { avatar: string; id: number; nickname: string };
   pages?: AdminBookPage[];
 }
 
@@ -114,6 +114,6 @@ export interface BookGenTask {
   completed_at?: null | string;
   created_at: string;
   updated_at: string;
-  user?: { avatar: string; id: number; nickname: string; };
+  user?: { avatar: string; id: number; nickname: string };
   book?: AdminBook;
 }

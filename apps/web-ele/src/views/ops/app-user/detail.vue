@@ -87,10 +87,8 @@ watch(
         <el-descriptions-item label="昵称">{{ user.nickname }}</el-descriptions-item>
         <el-descriptions-item label="手机">{{ user.phone_mask || "-" }}</el-descriptions-item>
         <el-descriptions-item label="状态">
-{{
-          user.status === 1 ? "正常" : "禁用"
-        }}
-</el-descriptions-item>
+          {{ user.status === 1 ? "正常" : "禁用" }}
+        </el-descriptions-item>
         <el-descriptions-item label="设备上限覆盖">
           {{ user.max_devices_override ?? "跟随系统默认" }}
         </el-descriptions-item>
