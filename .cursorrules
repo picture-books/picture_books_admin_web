@@ -1,0 +1,5 @@
+# 管理后台（本目录）
+
+业务 UI 只维护 **`apps/web-ele`**（Element Plus / Vben 5）。根目录：`pnpm dev:ele`。
+
+实现要点、代理、权限与菜单逻辑以**仓库根**的 [.cursorrules](../.cursorrules) 中「**picture_books_admin_web 实现备忘（web-ele）**」为准；联调步骤见 [README_PICTURE_BOOK_ADMIN.md](README_PICTURE_BOOK_ADMIN.md)。

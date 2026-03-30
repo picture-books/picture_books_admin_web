@@ -1,6 +1,4 @@
-import { defineConfig } from '@vben/oxfmt-config';
-
-export default defineConfig({
+export default {
   ignorePatterns: [
     'dist',
     'dev-dist',
@@ -23,4 +21,4 @@ export default defineConfig({
     '*-lock.yaml',
     'skills-lock.json',
   ],
-});
+};
