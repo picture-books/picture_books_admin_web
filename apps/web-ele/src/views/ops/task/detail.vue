@@ -15,9 +15,7 @@ const task = ref<BookGenTask | null>(null);
 const id = computed(() => Number(route.params.id));
 
 const userPrompt = computed(() => {
-  const value = task.value?.request_params as
-    | Record<string, unknown>
-    | undefined;
+  const value = task.value?.request_params as Record<string, unknown> | undefined;
   const raw = value?.user_prompt;
   return typeof raw === "string" ? raw : "-";
 });

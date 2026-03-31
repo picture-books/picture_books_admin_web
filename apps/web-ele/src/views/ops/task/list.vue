@@ -47,9 +47,7 @@ async function fetchList() {
 }
 
 function getUserPrompt(row: BookGenTask): string {
-  const params = (row.request_params ?? undefined) as
-    | Record<string, unknown>
-    | undefined;
+  const params = (row.request_params ?? undefined) as Record<string, unknown> | undefined;
   const raw = params?.user_prompt;
   return typeof raw === "string" ? raw : "";
 }
