@@ -110,6 +110,7 @@ export interface BookGenTask {
   page_images?: null | Record<string, unknown>;
   book_id?: null | number;
   error_message: string;
+  error_detail: string;
   started_at?: null | string;
   completed_at?: null | string;
   created_at: string;
