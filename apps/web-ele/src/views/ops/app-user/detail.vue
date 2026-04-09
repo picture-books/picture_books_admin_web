@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { EchartsUIType } from "@vben/plugins/echarts";
+
 import type {
   AdminReadingSessionItem,
   AdminReadingSummaryResp,
@@ -44,9 +45,7 @@ const id = computed(() => Number(route.params.id));
 const canEditDevicePolicy = computed(() =>
   (accessStore.accessCodes || []).includes("appuser:device_policy"),
 );
-const canViewReading = computed(() =>
-  (accessStore.accessCodes || []).includes("appuser:reading"),
-);
+const canViewReading = computed(() => (accessStore.accessCodes || []).includes("appuser:reading"));
 
 function todayLocalDate(): string {
   const d = new Date();

@@ -73,8 +73,11 @@ async function saveOrder() {
     await putBookRecommendationsApi(orderedIds.value);
     ElMessage.success("已保存");
     await fetchList();
-  } catch (e: unknown) {
-    const msg = e && typeof e === "object" && "message" in e ? String((e as { message: string }).message) : "保存失败";
+  } catch (error: unknown) {
+    const msg =
+      error && typeof error === "object" && "message" in error
+        ? String((error as { message: string }).message)
+        : "保存失败";
     ElMessage.error(msg);
   } finally {
     saving.value = false;
@@ -83,7 +86,9 @@ async function saveOrder() {
 
 async function confirmClear() {
   try {
-    await ElMessageBox.confirm("清空后 App 市场推荐区将暂无绘本，确认？", "提示", { type: "warning" });
+    await ElMessageBox.confirm("清空后 App 市场推荐区将暂无绘本，确认？", "提示", {
+      type: "warning",
+    });
     rows.value = [];
     await saveOrder();
   } catch {
@@ -130,18 +135,39 @@ onMounted(fetchList);
   <div class="p-5">
     <el-card shadow="never" class="mb-4">
       <div class="mb-3 flex flex-wrap items-center gap-2">
-        <el-button type="primary" :loading="saving" v-access:code="['book:recommend_write']" @click="saveOrder">
+        <el-button
+          type="primary"
+          :loading="saving"
+          v-access:code="['book:recommend_write']"
+          @click="saveOrder"
+        >
           保存顺序
         </el-button>
-        <el-button v-access:code="['book:recommend_list']" @click="openSuggest">一键推荐候选</el-button>
+        <el-button v-access:code="['book:recommend_list']" @click="openSuggest">
+一键推荐候选
+</el-button>
         <el-button :loading="loading" @click="fetchList">刷新</el-button>
-        <el-button type="danger" plain v-access:code="['book:recommend_write']" @click="confirmClear">清空推荐</el-button>
+        <el-button
+          type="danger"
+          plain
+          v-access:code="['book:recommend_write']"
+          @click="confirmClear"
+          >
+清空推荐
+</el-button>
       </div>
       <p class="text-muted-foreground mb-3 text-sm">
-        仅<strong>已发布</strong>绘本可写入推荐表。以下为 App「市场」Tab 展示顺序（由上至下、横滑推荐与前 N
-        本一致）。
+        仅<strong>已发布</strong>绘本可写入推荐表。以下为 App「市场」Tab
+        展示顺序（由上至下、横滑推荐与前 N 本一致）。
       </p>
-      <el-table v-loading="loading" :data="rows" border stripe row-key="book_id" style="width: 100%">
+      <el-table
+        v-loading="loading"
+        :data="rows"
+        border
+        stripe
+        row-key="book_id"
+        style="width: 100%"
+      >
         <el-table-column prop="sort_order" label="#" width="56" />
         <el-table-column label="封面" width="90">
           <template #default="{ row }">
@@ -161,9 +187,19 @@ onMounted(fetchList);
         <el-table-column prop="author_id" label="作者 ID" width="100" />
         <el-table-column label="排序" width="200" fixed="right">
           <template #default="{ $index }">
-            <el-button size="small" :disabled="$index === 0" @click="moveUp($index)">上移</el-button>
-            <el-button size="small" :disabled="$index === rows.length - 1" @click="moveDown($index)">下移</el-button>
-            <el-button size="small" type="danger" link v-access:code="['book:recommend_write']" @click="removeAt($index)">
+            <el-button size="small" :disabled="$index === 0" @click="moveUp($index)">
+上移
+</el-button>
+            <el-button size="small" :disabled="$index === rows.length - 1" @click="moveDown($index)">
+下移
+</el-button>
+            <el-button
+              size="small"
+              type="danger"
+              link
+              v-access:code="['book:recommend_write']"
+              @click="removeAt($index)"
+            >
               移除
             </el-button>
           </template>
@@ -192,7 +228,9 @@ onMounted(fetchList);
       </el-table>
       <template #footer>
         <el-button @click="suggestOpen = false">取消</el-button>
-        <el-button type="primary" :disabled="!selectedSuggest.length" @click="applySuggestSelection">加入列表</el-button>
+        <el-button type="primary" :disabled="selectedSuggest.length === 0" @click="applySuggestSelection">
+加入列表
+</el-button>
       </template>
     </el-dialog>
   </div>

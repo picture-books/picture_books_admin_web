@@ -18,16 +18,16 @@
 
 ## 业务页面目录
 
-| 模块                 | 路由前缀              | 视图目录                                      |
-| -------------------- | --------------------- | --------------------------------------------- |
-| 仪表盘               | `/analytics`          | `apps/web-ele/src/views/dashboard/analytics/` |
-| App 用户             | `/ops/app-users`      | `apps/web-ele/src/views/ops/app-user/`        |
-| 绘本                 | `/ops/books`          | `apps/web-ele/src/views/ops/book/`            |
-| 市场推荐             | `/ops/books/recommend`| `apps/web-ele/src/views/ops/book/recommend.vue` |
-| 生成任务             | `/ops/book-gen-tasks` | `apps/web-ele/src/views/ops/task/`            |
-| 意见反馈             | `/ops/feedbacks`      | `apps/web-ele/src/views/ops/feedback/`（列表 `list.vue`、详情 `detail.vue`） |
-| 管理员 / 角色 / 权限 | `/system/...`         | `apps/web-ele/src/views/system/`              |
-| App 关于文案         | `/system/app-about`   | `apps/web-ele/src/views/system/app-about/`   |
+| 模块                 | 路由前缀               | 视图目录                                                                     |
+| -------------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| 仪表盘               | `/analytics`           | `apps/web-ele/src/views/dashboard/analytics/`                                |
+| App 用户             | `/ops/app-users`       | `apps/web-ele/src/views/ops/app-user/`                                       |
+| 绘本                 | `/ops/books`           | `apps/web-ele/src/views/ops/book/`                                           |
+| 市场推荐             | `/ops/books/recommend` | `apps/web-ele/src/views/ops/book/recommend.vue`                              |
+| 生成任务             | `/ops/book-gen-tasks`  | `apps/web-ele/src/views/ops/task/`                                           |
+| 意见反馈             | `/ops/feedbacks`       | `apps/web-ele/src/views/ops/feedback/`（列表 `list.vue`、详情 `detail.vue`） |
+| 管理员 / 角色 / 权限 | `/system/...`          | `apps/web-ele/src/views/system/`                                             |
+| App 关于文案         | `/system/app-about`    | `apps/web-ele/src/views/system/app-about/`                                   |
 
 API 封装：`apps/web-ele/src/api/admin/`（含 `feedback.ts` 与 `system.ts` 内 `app-about`）。
 
