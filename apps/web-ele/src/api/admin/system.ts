@@ -89,3 +89,11 @@ export function updateDevicePolicyApi(max_devices_default: number) {
     max_devices_default,
   });
 }
+
+export function getAppAboutApi() {
+  return requestClient.get<{ content: string }>("/system/app-about");
+}
+
+export function updateAppAboutApi(content: string) {
+  return requestClient.put<{ content: string }>("/system/app-about", { content });
+}

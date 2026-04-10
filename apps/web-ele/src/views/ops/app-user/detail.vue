@@ -1,14 +1,27 @@
 <script lang="ts" setup>
-import type { AppUserDetailItem } from "#/api/types";
+import type { EchartsUIType } from "@vben/plugins/echarts";
 
-import { computed, ref, watch } from "vue";
+import type {
+  AdminReadingSessionItem,
+  AdminReadingSummaryResp,
+  AppUserDetailItem,
+} from "#/api/types";
+
+import { computed, nextTick, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { EchartsUI, useEcharts } from "@vben/plugins/echarts";
 import { useAccessStore } from "@vben/stores";
 
 import { ElMessage, ElMessageBox } from "element-plus";
 
-import { getAppUserDetailApi, patchAppUserDevicePolicyApi, patchAppUserStatusApi } from "#/api";
+import {
+  getAppUserDetailApi,
+  getAppUserReadingSessionsApi,
+  getAppUserReadingSummaryApi,
+  patchAppUserDevicePolicyApi,
+  patchAppUserStatusApi,
+} from "#/api";
 
 const route = useRoute();
 const router = useRouter();
@@ -17,16 +30,95 @@ const loading = ref(false);
 const user = ref<AppUserDetailItem | null>(null);
 const savingDevicePolicy = ref(false);
 
+const readingLoading = ref(false);
+const readingSummary = ref<AdminReadingSummaryResp | null>(null);
+const sessionsLoading = ref(false);
+const sessions = ref<AdminReadingSessionItem[]>([]);
+const sessionsTotal = ref(0);
+const sessionsPage = ref(1);
+const sessionsPageSize = ref(10);
+
+const chartRef = ref<EchartsUIType>();
+const { renderEcharts } = useEcharts(chartRef);
+
 const id = computed(() => Number(route.params.id));
 const canEditDevicePolicy = computed(() =>
   (accessStore.accessCodes || []).includes("appuser:device_policy"),
 );
+const canViewReading = computed(() => (accessStore.accessCodes || []).includes("appuser:reading"));
+
+function todayLocalDate(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function browserTimezoneIana(): string {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+}
+
+function formatSec(sec: number): string {
+  if (sec <= 0) return "0 秒";
+  if (sec < 60) return `${sec} 秒`;
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  if (m < 60) return s ? `${m} 分 ${s} 秒` : `${m} 分钟`;
+  const h = Math.floor(m / 60);
+  const rm = m % 60;
+  return `${h} 小时 ${rm} 分`;
+}
+
+async function loadReadingSummary() {
+  if (!canViewReading.value || !Number.isFinite(id.value)) return;
+  readingLoading.value = true;
+  try {
+    readingSummary.value = await getAppUserReadingSummaryApi(id.value, {
+      as_of_local_date: todayLocalDate(),
+      timezone_iana: browserTimezoneIana(),
+    });
+  } catch {
+    readingSummary.value = null;
+    ElMessage.error("阅读概况加载失败");
+  } finally {
+    readingLoading.value = false;
+  }
+}
+
+async function loadReadingSessions(page = 1) {
+  if (!canViewReading.value || !Number.isFinite(id.value)) return;
+  sessionsLoading.value = true;
+  sessionsPage.value = page;
+  try {
+    const res = await getAppUserReadingSessionsApi(id.value, {
+      page: sessionsPage.value,
+      page_size: sessionsPageSize.value,
+    });
+    sessions.value = res.list;
+    sessionsTotal.value = res.total;
+  } catch {
+    sessions.value = [];
+    sessionsTotal.value = 0;
+    ElMessage.error("阅读会话列表加载失败");
+  } finally {
+    sessionsLoading.value = false;
+  }
+}
 
 async function load() {
   if (!Number.isFinite(id.value)) return;
   loading.value = true;
   try {
     user.value = await getAppUserDetailApi(id.value);
+    if (canViewReading.value) {
+      await loadReadingSummary();
+      await loadReadingSessions(1);
+    } else {
+      readingSummary.value = null;
+      sessions.value = [];
+      sessionsTotal.value = 0;
+    }
   } catch {
     ElMessage.error("加载失败");
   } finally {
@@ -70,6 +162,59 @@ async function saveDevicePolicy() {
     savingDevicePolicy.value = false;
   }
 }
+
+watch(
+  () => readingSummary.value?.last_30_days,
+  async (days) => {
+    if (!days?.length) return;
+    await nextTick();
+    const labels = days.map((d) => d.local_date.slice(5));
+    const minutes = days.map((d) => Math.round((d.total_sec / 60) * 10) / 10);
+    const maxMin = Math.max(1, ...minutes);
+    await renderEcharts({
+      grid: {
+        bottom: 24,
+        containLabel: true,
+        left: "2%",
+        right: "2%",
+        top: 28,
+      },
+      series: [
+        {
+          barMaxWidth: 22,
+          data: minutes,
+          itemStyle: { color: "#5ab1ef" },
+          name: "阅读时长",
+          type: "bar",
+        },
+      ],
+      tooltip: {
+        axisPointer: { type: "shadow" },
+        formatter: (params: unknown) => {
+          const arr = Array.isArray(params) ? params : [params];
+          const p = arr[0] as { dataIndex?: number; name?: string };
+          const i = p.dataIndex ?? 0;
+          const point = days[i];
+          if (!point) return "";
+          return `${point.local_date}<br/>${formatSec(Number(point.total_sec))}`;
+        },
+        trigger: "axis",
+      },
+      xAxis: {
+        axisLabel: { rotate: 45 },
+        data: labels,
+        type: "category",
+      },
+      yAxis: {
+        max: Math.ceil(maxMin * 1.1),
+        name: "分钟",
+        splitNumber: 4,
+        type: "value",
+      },
+    });
+  },
+  { flush: "post" },
+);
 
 watch(
   () => route.params.id,
@@ -130,6 +275,78 @@ watch(
           >
             保存配置
           </el-button>
+        </div>
+      </div>
+
+      <div
+        v-if="canViewReading"
+        v-access:code="['appuser:reading']"
+        class="mt-6 rounded-md border border-gray-200 p-4"
+      >
+        <div class="mb-3 text-sm font-medium">阅读概况</div>
+        <div class="mb-1 text-xs text-gray-500">
+          统计锚点为当前浏览器本地日与时区（与 C 端摘要口径一致）；连续阅读按服务端 streak 规则。
+        </div>
+        <div v-loading="readingLoading" class="min-h-[120px]">
+          <template v-if="readingSummary">
+            <el-descriptions :column="2" border class="mb-4">
+              <el-descriptions-item label="连续阅读（天）">
+                {{ readingSummary.streak_days }}
+              </el-descriptions-item>
+              <el-descriptions-item label="今日累计">
+                {{ formatSec(readingSummary.today_sec) }}
+              </el-descriptions-item>
+              <el-descriptions-item label="总会话数">
+                {{ readingSummary.total_sessions }}
+              </el-descriptions-item>
+              <el-descriptions-item label="总阅读时长">
+                {{ formatSec(readingSummary.total_duration_sec) }}
+              </el-descriptions-item>
+              <el-descriptions-item label="阅读绘本数（去重）" :span="2">
+                {{ readingSummary.total_books_read }}
+              </el-descriptions-item>
+            </el-descriptions>
+            <div class="mb-2 text-xs text-gray-600">近 30 日每日阅读时长（分钟）</div>
+            <div v-if="readingSummary.last_30_days?.length" class="w-full">
+              <EchartsUI ref="chartRef" height="320px" />
+            </div>
+            <el-empty v-else description="近 30 日暂无阅读数据" :image-size="72" />
+          </template>
+        </div>
+
+        <div class="mt-6">
+          <div class="mb-2 text-sm font-medium">阅读会话明细</div>
+          <el-table v-loading="sessionsLoading" :data="sessions" stripe border size="small">
+            <el-table-column prop="id" label="ID" width="72" />
+            <el-table-column prop="local_date" label="本地日" width="110" />
+            <el-table-column prop="book_title" label="绘本" min-width="140" show-overflow-tooltip>
+              <template #default="{ row }">
+                {{ row.book_title || `绘本 #${row.book_id}` }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="duration_sec" label="时长" width="100">
+              <template #default="{ row }">{{ formatSec(row.duration_sec) }}</template>
+            </el-table-column>
+            <el-table-column prop="started_at" label="开始" min-width="160" show-overflow-tooltip />
+            <el-table-column prop="ended_at" label="结束" min-width="160" show-overflow-tooltip />
+            <el-table-column prop="timezone_iana" label="时区" width="140" show-overflow-tooltip />
+          </el-table>
+          <div class="mt-3 flex justify-end">
+            <el-pagination
+              v-model:current-page="sessionsPage"
+              v-model:page-size="sessionsPageSize"
+              :total="sessionsTotal"
+              :page-sizes="[10, 20, 50]"
+              layout="total, sizes, prev, pager, next"
+              @current-change="(p: number) => loadReadingSessions(p)"
+              @size-change="
+                () => {
+                  sessionsPage = 1;
+                  loadReadingSessions(1);
+                }
+              "
+            />
+          </div>
         </div>
       </div>
     </el-card>

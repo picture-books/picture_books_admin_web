@@ -3,7 +3,13 @@ import type { RouteRecordRaw } from "vue-router";
 const routes: RouteRecordRaw[] = [
   {
     meta: {
-      authority: ["adminuser:list", "role:list", "permission:list", "system:device_policy"],
+      authority: [
+        "adminuser:list",
+        "role:list",
+        "permission:list",
+        "system:device_policy",
+        "system:app_about",
+      ],
       icon: "lucide:settings",
       order: 100,
       title: "系统管理",
@@ -19,6 +25,16 @@ const routes: RouteRecordRaw[] = [
           authority: ["system:device_policy"],
           icon: "lucide:smartphone",
           title: "设备策略",
+        },
+      },
+      {
+        name: "SystemAppAbout",
+        path: "/system/app-about",
+        component: () => import("#/views/system/app-about/index.vue"),
+        meta: {
+          authority: ["system:app_about"],
+          icon: "lucide:info",
+          title: "App 关于文案",
         },
       },
       {

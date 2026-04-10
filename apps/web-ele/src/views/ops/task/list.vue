@@ -46,6 +46,12 @@ async function fetchList() {
   }
 }
 
+function getUserPrompt(row: BookGenTask): string {
+  const params = (row.request_params ?? undefined) as Record<string, unknown> | undefined;
+  const raw = params?.user_prompt;
+  return typeof raw === "string" ? raw : "";
+}
+
 function goDetail(row: BookGenTask) {
   router.push({ name: "OpsGenTaskDetail", params: { id: String(row.id) } });
 }
@@ -86,6 +92,11 @@ onMounted(fetchList);
         </el-table-column>
         <el-table-column prop="progress" label="进度" width="80" />
         <el-table-column prop="book_id" label="BookID" width="88" />
+        <el-table-column label="用户 Prompt" min-width="200" show-overflow-tooltip>
+          <template #default="scope">
+            {{ getUserPrompt(scope.row) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="created_at" label="创建时间" min-width="170" />
         <el-table-column label="操作" width="100" fixed="right">
           <template #default="scope">

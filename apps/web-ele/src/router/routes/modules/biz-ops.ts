@@ -12,8 +12,11 @@ const routes: RouteRecordRaw[] = [
         "book:reject",
         "book:unpublish",
         "book:delete",
+        "book:recommend_list",
+        "book:recommend_write",
         "task:list",
         "task:detail",
+        "feedback:list",
       ],
       icon: "lucide:book-open",
       order: 0,
@@ -53,6 +56,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        name: "OpsBookRecommend",
+        path: "/ops/books/recommend",
+        component: () => import("#/views/ops/book/recommend.vue"),
+        meta: {
+          authority: ["book:recommend_list"],
+          icon: "lucide:sparkles",
+          title: "市场推荐",
+        },
+      },
+      {
         name: "OpsBookDetail",
         path: "/ops/books/:id",
         component: () => import("#/views/ops/book/detail.vue"),
@@ -70,6 +83,26 @@ const routes: RouteRecordRaw[] = [
           authority: ["task:list"],
           icon: "lucide:list-todo",
           title: "生成任务",
+        },
+      },
+      {
+        name: "OpsFeedbacks",
+        path: "/ops/feedbacks",
+        component: () => import("#/views/ops/feedback/list.vue"),
+        meta: {
+          authority: ["feedback:list"],
+          icon: "lucide:message-square-text",
+          title: "意见反馈",
+        },
+      },
+      {
+        name: "OpsFeedbackDetail",
+        path: "/ops/feedbacks/:id",
+        component: () => import("#/views/ops/feedback/detail.vue"),
+        meta: {
+          authority: ["feedback:list"],
+          hideInMenu: true,
+          title: "反馈详情",
         },
       },
       {
