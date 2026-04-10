@@ -21,7 +21,7 @@
 | 模块                 | 路由前缀               | 视图目录                                                                     |
 | -------------------- | ---------------------- | ---------------------------------------------------------------------------- |
 | 仪表盘               | `/analytics`           | `apps/web-ele/src/views/dashboard/analytics/`                                |
-| App 用户             | `/ops/app-users`       | `apps/web-ele/src/views/ops/app-user/`                                       |
+| App 用户             | `/ops/app-users`       | `apps/web-ele/src/views/ops/app-user/`（详情含阅读偏好 `child_age_band` / `preferred_themes`、设备引导统计） |
 | 绘本                 | `/ops/books`           | `apps/web-ele/src/views/ops/book/`                                           |
 | 市场推荐             | `/ops/books/recommend` | `apps/web-ele/src/views/ops/book/recommend.vue`                              |
 | 生成任务             | `/ops/book-gen-tasks`  | `apps/web-ele/src/views/ops/task/`                                           |

@@ -42,6 +42,19 @@ const chartRef = ref<EchartsUIType>();
 const { renderEcharts } = useEcharts(chartRef);
 
 const id = computed(() => Number(route.params.id));
+
+const ageBandLabels: Record<string, string> = {
+  under_1: "未满周岁",
+  nursery_small: "小班",
+  nursery_middle: "中班",
+  nursery_large: "大班",
+  preschool: "学前",
+};
+
+function ageBandLabel(code: string | null | undefined): string {
+  if (!code) return "-";
+  return ageBandLabels[code] ?? code;
+}
 const canEditDevicePolicy = computed(() =>
   (accessStore.accessCodes || []).includes("appuser:device_policy"),
 );
@@ -239,6 +252,28 @@ watch(
         </el-descriptions-item>
         <el-descriptions-item label="创建时间">{{ user.created_at }}</el-descriptions-item>
         <el-descriptions-item label="更新时间">{{ user.updated_at }}</el-descriptions-item>
+        <el-descriptions-item label="阅读年龄档（账号）">
+          {{ ageBandLabel(user.child_age_band) }}
+        </el-descriptions-item>
+        <el-descriptions-item label="偏好主题（账号）" :span="2">
+          <template v-if="user.preferred_themes?.length">
+            <el-tag
+              v-for="t in user.preferred_themes"
+              :key="t"
+              class="mr-1 mb-1"
+              size="small"
+            >
+              {{ t }}
+            </el-tag>
+          </template>
+          <span v-else>-</span>
+        </el-descriptions-item>
+        <el-descriptions-item label="设备引导完成次数">
+          {{ user.device_onboarding_completed_count ?? 0 }}
+        </el-descriptions-item>
+        <el-descriptions-item label="最近设备引导完成时间">
+          {{ user.last_device_onboarding_at || "-" }}
+        </el-descriptions-item>
       </el-descriptions>
       <div class="mt-4">
         <el-button v-access:code="['appuser:status']" type="warning" @click="toggleStatus">
