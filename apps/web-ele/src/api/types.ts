@@ -19,10 +19,10 @@ export interface AppUserListItem {
 export interface AppUserDetailItem extends AppUserListItem {
   updated_at: string;
   /** 账号级阅读偏好 */
-  child_age_band?: string | null;
+  child_age_band?: null | string;
   preferred_themes?: string[];
   device_onboarding_completed_count?: number;
-  last_device_onboarding_at?: string | null;
+  last_device_onboarding_at?: null | string;
 }
 
 /** 某日阅读累计秒数（与后端 dto.ReadingDayPoint 对齐） */

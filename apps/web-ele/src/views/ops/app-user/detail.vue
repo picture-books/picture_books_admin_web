@@ -51,7 +51,7 @@ const ageBandLabels: Record<string, string> = {
   preschool: "学前",
 };
 
-function ageBandLabel(code: string | null | undefined): string {
+function ageBandLabel(code: null | string | undefined): string {
   if (!code) return "-";
   return ageBandLabels[code] ?? code;
 }
@@ -257,12 +257,7 @@ watch(
         </el-descriptions-item>
         <el-descriptions-item label="偏好主题（账号）" :span="2">
           <template v-if="user.preferred_themes?.length">
-            <el-tag
-              v-for="t in user.preferred_themes"
-              :key="t"
-              class="mr-1 mb-1"
-              size="small"
-            >
+            <el-tag v-for="t in user.preferred_themes" :key="t" class="mr-1 mb-1" size="small">
               {{ t }}
             </el-tag>
           </template>
