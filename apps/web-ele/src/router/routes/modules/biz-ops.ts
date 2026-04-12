@@ -14,6 +14,8 @@ const routes: RouteRecordRaw[] = [
         "book:delete",
         "book:recommend_list",
         "book:recommend_write",
+        "book:category_list",
+        "book:category_write",
         "task:list",
         "task:detail",
         "feedback:list",
@@ -62,7 +64,17 @@ const routes: RouteRecordRaw[] = [
         meta: {
           authority: ["book:recommend_list"],
           icon: "lucide:sparkles",
-          title: "市场推荐",
+          title: "热门推荐",
+        },
+      },
+      {
+        name: "OpsBookCategories",
+        path: "/ops/books/categories",
+        component: () => import("#/views/ops/book/categories.vue"),
+        meta: {
+          authority: ["book:category_list"],
+          icon: "lucide:tags",
+          title: "绘本分类",
         },
       },
       {

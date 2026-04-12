@@ -59,6 +59,17 @@ export interface DevicePolicy {
   max_devices_default: number;
 }
 
+/** GET/POST/PUT /admin/book-categories */
+export interface BookCategoryAdminItem {
+  id: number;
+  name: string;
+  sort_order: number;
+  enabled: boolean;
+  book_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
 /** GET /feedbacks 列表行（无 image_urls，仅有 image_count） */
 export interface AdminFeedbackRow {
   id: number;

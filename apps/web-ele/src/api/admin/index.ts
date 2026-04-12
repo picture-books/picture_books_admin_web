@@ -1,4 +1,5 @@
 export * from "./app-users";
+export * from "./book-categories";
 export * from "./book-recommendations";
 export * from "./books";
 export * from "./feedback";

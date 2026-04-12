@@ -23,7 +23,8 @@
 | 仪表盘               | `/analytics`           | `apps/web-ele/src/views/dashboard/analytics/`                                                                |
 | App 用户             | `/ops/app-users`       | `apps/web-ele/src/views/ops/app-user/`（详情含阅读偏好 `child_age_band` / `preferred_themes`、设备引导统计） |
 | 绘本                 | `/ops/books`           | `apps/web-ele/src/views/ops/book/`                                                                           |
-| 市场推荐             | `/ops/books/recommend` | `apps/web-ele/src/views/ops/book/recommend.vue`                                                              |
+| 热门推荐             | `/ops/books/recommend` | `apps/web-ele/src/views/ops/book/recommend.vue`                                                              |
+| 绘本分类             | `/ops/books/categories` | `apps/web-ele/src/views/ops/book/categories.vue`                                                          |
 | 生成任务             | `/ops/book-gen-tasks`  | `apps/web-ele/src/views/ops/task/`                                                                           |
 | 意见反馈             | `/ops/feedbacks`       | `apps/web-ele/src/views/ops/feedback/`（列表 `list.vue`、详情 `detail.vue`）                                 |
 | 管理员 / 角色 / 权限 | `/system/...`          | `apps/web-ele/src/views/system/`                                                                             |
@@ -31,11 +32,20 @@
 
 API 封装：`apps/web-ele/src/api/admin/`（含 `feedback.ts` 与 `system.ts` 内 `app-about`）。
 
-### 市场推荐（App 市场 Tab）
+### 热门推荐（App 热门推荐 Tab）
 
 - `GET /books/recommendations`：当前推荐顺序列表（权限 `book:recommend_list`）。
 - `PUT /books/recommendations`：body `{ book_ids: number[] }` 整表替换，仅允许**已发布**绘本（`book:recommend_write`）。
 - `POST /books/recommendations/suggest?limit=30`：按阅读次数、收藏数、阅读时长返回候选（`book:recommend_list`）。
+
+### 绘本分类（App `GET /api/v1/book-categories` / `books.theme`）
+
+- `GET /book-categories`：列表（含 `book_count`），`book:category_list`。
+- `POST /book-categories`：body `name`（必填）、`sort_order`、`enabled`，`book:category_write`。
+- `PUT /book-categories/:id`：可选更新同上，`book:category_write`。
+- `DELETE /book-categories/:id`：无绘本使用该 `theme` 时可删，`book:category_write`。
+
+前端 API：`apps/web-ele/src/api/admin/book-categories.ts`。
 
 ## 生产部署注意
 
