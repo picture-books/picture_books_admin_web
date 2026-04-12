@@ -119,15 +119,12 @@ onMounted(load);
   <div class="p-5">
     <el-card shadow="never" header="绘本主题分类">
       <p class="mb-4 text-sm text-gray-600">
-        与 App 端 <code class="rounded bg-gray-100 px-1">GET /api/v1/book-categories</code>
-        及绘本字段 <code class="rounded bg-gray-100 px-1">theme</code> 一致；改名不会自动迁移已有绘本。
+        与 App 端
+        <code class="rounded bg-gray-100 px-1">GET /api/v1/book-categories</code> 及绘本字段
+        <code class="rounded bg-gray-100 px-1">theme</code> 一致；改名不会自动迁移已有绘本。
       </p>
       <div class="mb-3">
-        <el-button
-          v-access:code="['book:category_write']"
-          type="primary"
-          @click="openCreate"
-        >
+        <el-button v-access:code="['book:category_write']" type="primary" @click="openCreate">
           新建分类
         </el-button>
         <el-button @click="load">刷新</el-button>
@@ -195,9 +192,7 @@ onMounted(load);
       </el-form>
       <template #footer>
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="dialogSaving" @click="saveDialog">
-          保存
-        </el-button>
+        <el-button type="primary" :loading="dialogSaving" @click="saveDialog"> 保存 </el-button>
       </template>
     </el-dialog>
   </div>

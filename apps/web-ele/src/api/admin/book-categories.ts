@@ -22,10 +22,7 @@ export function updateAdminBookCategoryApi(
     sort_order?: number;
   },
 ) {
-  return requestClient.put<BookCategoryAdminItem>(
-    `/book-categories/${id}`,
-    body,
-  );
+  return requestClient.put<BookCategoryAdminItem>(`/book-categories/${id}`, body);
 }
 
 export function deleteAdminBookCategoryApi(id: number) {
