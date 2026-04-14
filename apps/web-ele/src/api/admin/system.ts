@@ -3,6 +3,7 @@ import type {
   AdminRole,
   AdminUserDetail,
   AdminUserRow,
+  BookgenAIProviderRow,
   DevicePolicy,
   PageData,
 } from "#/api/types";
@@ -96,4 +97,46 @@ export function getAppAboutApi() {
 
 export function updateAppAboutApi(content: string) {
   return requestClient.put<{ content: string }>("/system/app-about", { content });
+}
+
+export function getBookgenAIProvidersApi() {
+  return requestClient.get<BookgenAIProviderRow[]>("/system/bookgen-ai-providers");
+}
+
+export function createBookgenAIProviderApi(body: {
+  api_key: string;
+  base_url: string;
+  capability: string;
+  driver: string;
+  enabled?: boolean;
+  extra?: string;
+  model?: string;
+  models?: string[];
+  name: string;
+}) {
+  return requestClient.post<BookgenAIProviderRow>("/system/bookgen-ai-providers", body);
+}
+
+export function updateBookgenAIProviderApi(
+  id: number,
+  body: {
+    api_key?: null | string;
+    base_url?: string;
+    driver?: string;
+    enabled?: boolean;
+    extra?: string;
+    model?: string;
+    models?: string[];
+    name?: string;
+  },
+) {
+  return requestClient.put<BookgenAIProviderRow>(`/system/bookgen-ai-providers/${id}`, body);
+}
+
+export function activateBookgenAIProviderApi(id: number) {
+  return requestClient.post(`/system/bookgen-ai-providers/${id}/activate`);
+}
+
+export function deleteBookgenAIProviderApi(id: number) {
+  return requestClient.delete(`/system/bookgen-ai-providers/${id}`);
 }

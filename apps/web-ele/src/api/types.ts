@@ -59,6 +59,26 @@ export interface DevicePolicy {
   max_devices_default: number;
 }
 
+/** GET /admin/system/bookgen-ai-providers */
+export interface BookgenAIProviderRow {
+  id: number;
+  capability: string;
+  driver: string;
+  name: string;
+  base_url: string;
+  /** 候选模型；空数组表示不维护列表，仅用 model */
+  models: string[];
+  /** 当前选用的模型 */
+  model: string;
+  extra: string;
+  enabled: boolean;
+  is_active: boolean;
+  api_key_set: boolean;
+  updated_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
 /** GET/POST/PUT /admin/book-categories */
 export interface BookCategoryAdminItem {
   id: number;

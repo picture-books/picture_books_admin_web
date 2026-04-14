@@ -9,6 +9,7 @@ const routes: RouteRecordRaw[] = [
         "permission:list",
         "system:device_policy",
         "system:app_about",
+        "system:bookgen_ai",
       ],
       icon: "lucide:settings",
       order: 100,
@@ -35,6 +36,16 @@ const routes: RouteRecordRaw[] = [
           authority: ["system:app_about"],
           icon: "lucide:info",
           title: "App 关于文案",
+        },
+      },
+      {
+        name: "SystemBookgenAI",
+        path: "/system/bookgen-ai",
+        component: () => import("#/views/system/bookgen-ai/index.vue"),
+        meta: {
+          authority: ["system:bookgen_ai"],
+          icon: "lucide:sparkles",
+          title: "绘本 AI 服务商",
         },
       },
       {
