@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import type { BookgenAIProviderRow } from "#/api/types";
+
 import { computed, onMounted, reactive, ref } from "vue";
 
 import { ElMessage, ElMessageBox } from "element-plus";
-
-import type { BookgenAIProviderRow } from "#/api/types";
 
 import {
   activateBookgenAIProviderApi,
@@ -195,8 +195,8 @@ async function onActivate(row: BookgenAIProviderRow) {
     await activateBookgenAIProviderApi(row.id);
     ElMessage.success("已切换");
     await load();
-  } catch (e) {
-    if (e !== "cancel") {
+  } catch (error) {
+    if (error !== "cancel") {
       ElMessage.error("操作失败");
     }
   }
@@ -208,8 +208,8 @@ async function onDelete(row: BookgenAIProviderRow) {
     await deleteBookgenAIProviderApi(row.id);
     ElMessage.success("已删除");
     await load();
-  } catch (e) {
-    if (e !== "cancel") {
+  } catch (error) {
+    if (error !== "cancel") {
       ElMessage.error("删除失败");
     }
   }
@@ -222,11 +222,7 @@ onMounted(load);
   <div class="p-5">
     <el-card v-loading="loading" shadow="never" header="绘本生成 AI 服务商">
       <div class="mb-3 flex flex-wrap gap-2">
-        <el-button
-          v-access:code="['system:bookgen_ai']"
-          type="primary"
-          @click="openCreate"
-        >
+        <el-button v-access:code="['system:bookgen_ai']" type="primary" @click="openCreate">
           新建配置
         </el-button>
       </div>
@@ -313,12 +309,7 @@ onMounted(load);
       <el-form label-width="120px">
         <el-form-item v-if="dialogMode === 'create'" label="能力">
           <el-select v-model="form.capability" class="w-full" @change="onCapChange">
-            <el-option
-              v-for="c in CAP_OPTS"
-              :key="c.value"
-              :label="c.label"
-              :value="c.value"
-            />
+            <el-option v-for="c in CAP_OPTS" :key="c.value" :label="c.label" :value="c.value" />
           </el-select>
         </el-form-item>
         <el-form-item v-else label="能力">
@@ -337,10 +328,16 @@ onMounted(load);
         <el-form-item label="名称">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item v-if="form.capability !== 'speech' && form.capability !== 'video'" label="Base URL">
+        <el-form-item
+          v-if="form.capability !== 'speech' && form.capability !== 'video'"
+          label="Base URL"
+        >
           <el-input v-model="form.base_url" placeholder="https://..." />
         </el-form-item>
-        <el-form-item v-if="form.capability !== 'speech' && form.capability !== 'video'" label="API Key">
+        <el-form-item
+          v-if="form.capability !== 'speech' && form.capability !== 'video'"
+          label="API Key"
+        >
           <el-input
             v-model="form.api_key"
             type="password"
@@ -362,18 +359,13 @@ onMounted(load);
           </el-form-item>
           <el-form-item label="当前选用">
             <el-select
-              v-if="form.models.filter((m) => m.trim()).length > 0"
+              v-if="form.models.some((m) => m.trim())"
               v-model="form.model"
               class="w-full"
               filterable
               placeholder="从候选中选择当前使用的模型"
             >
-              <el-option
-                v-for="m in modelPickOptions"
-                :key="m"
-                :label="m"
-                :value="m"
-              />
+              <el-option v-for="m in modelPickOptions" :key="m" :label="m" :value="m" />
             </el-select>
             <el-input
               v-else
