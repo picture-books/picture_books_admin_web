@@ -73,10 +73,12 @@ async function handleRetry() {
   try {
     const res = await retryBookGenTaskApi(task.value.id);
     ElMessage.success("已创建新的生成任务");
-    await (res?.task_id && res.task_id !== task.value.id ? router.replace({
-        name: "OpsGenTaskDetail",
-        params: { id: String(res.task_id) },
-      }) : load());
+    await (res?.task_id && res.task_id !== task.value.id
+      ? router.replace({
+          name: "OpsGenTaskDetail",
+          params: { id: String(res.task_id) },
+        })
+      : load());
   } catch {
     ElMessage.error("重新生成失败");
   } finally {

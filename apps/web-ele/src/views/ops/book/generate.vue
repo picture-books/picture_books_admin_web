@@ -87,14 +87,13 @@ async function submit() {
     ElMessage.warning("请选择故事主题");
     return;
   }
-  if (needVisual.value && (
-      !form.illustration_style?.trim() ||
-      !form.color_style?.trim() ||
-      !form.visual_mood?.trim()
-    )) {
-      ElMessage.warning("纯阅读/普通模式需填写画风、色彩与氛围");
-      return;
-    }
+  if (
+    needVisual.value &&
+    (!form.illustration_style?.trim() || !form.color_style?.trim() || !form.visual_mood?.trim())
+  ) {
+    ElMessage.warning("纯阅读/普通模式需填写画风、色彩与氛围");
+    return;
+  }
   submitting.value = true;
   try {
     const res = await postAdminGenerateBookApi({ ...form });
