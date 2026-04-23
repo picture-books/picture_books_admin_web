@@ -25,6 +25,7 @@
 | 绘本                 | `/ops/books`            | `apps/web-ele/src/views/ops/book/`                                                                           |
 | 热门推荐             | `/ops/books/recommend`  | `apps/web-ele/src/views/ops/book/recommend.vue`                                                              |
 | 绘本分类             | `/ops/books/categories` | `apps/web-ele/src/views/ops/book/categories.vue`                                                             |
+| 生成绘本（代用户）   | `/ops/books/generate`  | `apps/web-ele/src/views/ops/book/generate.vue`（与 C 端 `POST /api/v1/books` 同参 + `author_id`）                 |
 | 生成任务             | `/ops/book-gen-tasks`   | `apps/web-ele/src/views/ops/task/`                                                                           |
 | 意见反馈             | `/ops/feedbacks`        | `apps/web-ele/src/views/ops/feedback/`（列表 `list.vue`、详情 `detail.vue`）                                 |
 | 管理员 / 角色 / 权限 | `/system/...`           | `apps/web-ele/src/views/system/`                                                                             |
@@ -46,6 +47,11 @@ API 封装：`apps/web-ele/src/api/admin/`（含 `feedback.ts` 与 `system.ts` �
 - `DELETE /book-categories/:id`：无绘本使用该 `theme` 时可删，`book:category_write`。
 
 前端 API：`apps/web-ele/src/api/admin/book-categories.ts`。
+
+### 代用户生成绘本
+
+- `POST /books/generate`：body 与 App `POST /api/v1/books` 相同，**另加** `author_id`（`users.id`），权限 `book:generate`；成功返回 `task_id` 等，与 C 端创建任务一致。
+- 前端封装：`postAdminGenerateBookApi`（`apps/web-ele/src/api/admin/books.ts`）。App 用户详情可带 `?user_id=` 进入本页并预填作者 ID。
 
 ## 生产部署注意
 

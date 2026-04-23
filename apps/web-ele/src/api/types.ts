@@ -204,6 +204,30 @@ export interface AdminBookPage {
   updated_at: string;
 }
 
+/** POST /admin/books/generate 与 C 端创建任务返回一致 */
+export interface CreateBookTaskResult {
+  task_id: number;
+  status: number;
+  progress: number;
+}
+
+/** 代用户生成绘本（与 App POST /books 同字段，另加 author_id） */
+export interface AdminCreateBookBody {
+  author_id: number;
+  age: string;
+  theme: string;
+  pages: number;
+  experience_mode: number;
+  main_character_name: string;
+  main_character_type: string;
+  main_character_appearance: string;
+  main_character_personality: string;
+  illustration_style?: string;
+  color_style?: string;
+  visual_mood?: string;
+  user_prompt?: string;
+}
+
 export interface BookGenTask {
   id: number;
   user_id: number;

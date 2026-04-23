@@ -22,7 +22,10 @@ const CAP_OPTS = [
 
 const DRIVER_BY_CAP: Record<string, { label: string; value: string }[]> = {
   story_llm: [{ label: "OpenAI 兼容 Chat", value: "openai_compatible_chat" }],
-  text_to_image: [{ label: "ModelScope 文生图", value: "modelscope_image" }],
+  text_to_image: [
+    { label: "ModelScope 文生图", value: "modelscope_image" },
+    { label: "OpenAI 兼容 Images", value: "openai_compatible_image" },
+  ],
   speech: [{ label: "未接入（占位）", value: "none" }],
   video: [{ label: "未接入（占位）", value: "none" }],
 };
@@ -129,14 +132,14 @@ async function submitDialog() {
     return;
   }
   const isAux = form.capability === "speech" || form.capability === "video";
-  const trimmedModels = form.models.map((m) => m.trim()).filter(Boolean);
+  const curModel = form.model.trim();
+  let modelsForApi = form.models.map((m) => m.trim()).filter(Boolean);
   if (
     (form.capability === "story_llm" || form.capability === "text_to_image") &&
-    trimmedModels.length > 0 &&
-    !trimmedModels.includes(form.model.trim())
+    curModel &&
+    !modelsForApi.includes(curModel)
   ) {
-    ElMessage.warning("当前选用模型须为候选列表中的一项");
-    return;
+    modelsForApi = [...modelsForApi, curModel];
   }
   if (!isAux && (!form.base_url.trim() || !form.api_key.trim())) {
     if (dialogMode.value === "create") {
@@ -156,8 +159,8 @@ async function submitDialog() {
         name: form.name.trim(),
         base_url: isAux ? "" : form.base_url.trim(),
         api_key: isAux ? "" : form.api_key.trim(),
-        models: trimmedModels,
-        model: form.model.trim(),
+        models: modelsForApi,
+        model: curModel,
         extra: form.extra.trim(),
         enabled: form.enabled,
       });
@@ -166,8 +169,8 @@ async function submitDialog() {
       const body: Parameters<typeof updateBookgenAIProviderApi>[1] = {
         name: form.name.trim(),
         base_url: form.base_url.trim(),
-        models: trimmedModels,
-        model: form.model.trim(),
+        models: modelsForApi,
+        model: curModel,
         extra: form.extra.trim(),
         driver: form.driver,
         enabled: form.enabled,
@@ -375,7 +378,12 @@ onMounted(load);
           </el-form-item>
         </template>
         <el-form-item label="扩展 JSON">
-          <el-input v-model="form.extra" type="textarea" :rows="3" placeholder="可选" />
+          <el-input
+            v-model="form.extra"
+            type="textarea"
+            :rows="3"
+            placeholder='文生图 extra：内页 per_page|grid 与 openai 参数多在此配。示例：{"page_illustration_mode":"per_page","openai_image":{"size":"1024x1024","response_format":"b64_json","quality":""}}；多宫格将 page_illustration_mode 改为 grid 并可配 grid_rows|cols。default_config 不写内页版式。详见 picture_books_backend README。'
+          />
         </el-form-item>
         <el-form-item label="启用">
           <el-switch v-model="form.enabled" />

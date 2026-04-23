@@ -1,6 +1,11 @@
-import type { AdminBook, PageData } from "#/api/types";
+import type { AdminBook, AdminCreateBookBody, CreateBookTaskResult, PageData } from "#/api/types";
 
 import { requestClient } from "#/api/request";
+
+/** 代 App 用户创建绘本（与 C 端 POST /api/v1/books 同参 + author_id） */
+export function postAdminGenerateBookApi(body: AdminCreateBookBody) {
+  return requestClient.post<CreateBookTaskResult>("/books/generate", body);
+}
 
 export function getAdminBookListApi(params: {
   author_id?: number;

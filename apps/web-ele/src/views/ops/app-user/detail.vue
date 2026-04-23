@@ -59,6 +59,10 @@ const canEditDevicePolicy = computed(() =>
   (accessStore.accessCodes || []).includes("appuser:device_policy"),
 );
 const canViewReading = computed(() => (accessStore.accessCodes || []).includes("appuser:reading"));
+function goGenerateBookForUser() {
+  if (!id.value) return;
+  router.push({ name: "OpsBookGenerate", query: { user_id: String(id.value) } });
+}
 
 function todayLocalDate(): string {
   const d = new Date();
@@ -238,7 +242,17 @@ watch(
 
 <template>
   <div v-loading="loading" class="p-5">
-    <el-page-header content="用户详情" @back="router.push({ name: 'OpsAppUsers' })" />
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <el-page-header content="用户详情" @back="router.push({ name: 'OpsAppUsers' })" />
+      <el-button
+        v-access:code="['book:generate']"
+        type="primary"
+        plain
+        @click="goGenerateBookForUser"
+      >
+        代该用户生成绘本
+      </el-button>
+    </div>
     <el-card v-if="user" class="mt-4" shadow="never">
       <el-descriptions :column="2" border>
         <el-descriptions-item label="ID">{{ user.id }}</el-descriptions-item>

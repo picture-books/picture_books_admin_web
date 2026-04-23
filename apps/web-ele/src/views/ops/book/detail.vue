@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { AdminBook } from "#/api/types";
+import type { AdminBook, AdminBookPage } from "#/api/types";
 
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -13,6 +13,47 @@ const router = useRouter();
 const loading = ref(false);
 const book = ref<AdminBook | null>(null);
 const id = computed(() => Number(route.params.id));
+
+/** 封面 + 按页序的内页图，供预览时前后切换 */
+const allBookImagePreviewUrls = computed(() => {
+  const b = book.value;
+  if (!b) {
+    return [];
+  }
+  const u: string[] = [];
+  if (b.cover_image) {
+    u.push(b.cover_image);
+  }
+  const pages = [...(b.pages ?? [])].toSorted((a, c) => a.page_num - c.page_num);
+  for (const p of pages) {
+    if (p.image_url) {
+      u.push(p.image_url);
+    }
+  }
+  return u;
+});
+
+function pageRowImagePreviewIndex(row: AdminBookPage) {
+  const b = book.value;
+  if (!b || !row.image_url) {
+    return 0;
+  }
+  const pages = [...(b.pages ?? [])].toSorted((a, c) => a.page_num - c.page_num);
+  let at = 0;
+  if (b.cover_image) {
+    at++;
+  }
+  for (const p of pages) {
+    if (!p.image_url) {
+      continue;
+    }
+    if (p.page_num === row.page_num) {
+      return at;
+    }
+    at++;
+  }
+  return 0;
+}
 
 async function load() {
   if (!Number.isFinite(id.value)) return;
@@ -57,8 +98,12 @@ watch(
             <el-image
               v-if="book.cover_image"
               :src="book.cover_image"
-              style="width: 120px; height: 120px"
+              :preview-src-list="allBookImagePreviewUrls"
+              :initial-index="0"
+              preview-teleported
+              hide-on-click-modal
               fit="cover"
+              class="book-detail__thumb book-detail__thumb--lg"
             />
             <span v-else>-</span>
           </el-descriptions-item>
@@ -74,8 +119,12 @@ watch(
               <el-image
                 v-if="scope?.row?.image_url"
                 :src="scope.row.image_url"
-                style="width: 48px; height: 48px"
+                :preview-src-list="allBookImagePreviewUrls"
+                :initial-index="pageRowImagePreviewIndex(scope.row)"
+                preview-teleported
+                hide-on-click-modal
                 fit="cover"
+                class="book-detail__thumb"
               />
             </template>
           </el-table-column>
@@ -84,3 +133,18 @@ watch(
     </template>
   </div>
 </template>
+
+<style scoped>
+.book-detail__thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  cursor: zoom-in;
+  vertical-align: middle;
+}
+.book-detail__thumb--lg {
+  width: 120px;
+  height: 120px;
+  cursor: zoom-in;
+}
+</style>

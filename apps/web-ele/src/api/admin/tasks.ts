@@ -1,4 +1,4 @@
-import type { BookGenTask, PageData } from "#/api/types";
+import type { BookGenTask, CreateBookTaskResult, PageData } from "#/api/types";
 
 import { requestClient } from "#/api/request";
 
@@ -23,4 +23,9 @@ export function deleteBookGenTaskApi(id: number) {
 
 export function cancelBookGenTaskApi(id: number) {
   return requestClient.post<unknown>(`/book-gen-tasks/${id}/cancel`);
+}
+
+/** 失败或已取消任务，按原参数重新入队 */
+export function retryBookGenTaskApi(id: number) {
+  return requestClient.post<CreateBookTaskResult>(`/book-gen-tasks/${id}/retry`);
 }

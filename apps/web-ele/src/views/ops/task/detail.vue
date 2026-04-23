@@ -6,7 +6,12 @@ import { useRoute, useRouter } from "vue-router";
 
 import { ElMessage } from "element-plus";
 
-import { cancelBookGenTaskApi, deleteBookGenTaskApi, getBookGenTaskDetailApi } from "#/api";
+import {
+  cancelBookGenTaskApi,
+  deleteBookGenTaskApi,
+  getBookGenTaskDetailApi,
+  retryBookGenTaskApi,
+} from "#/api";
 
 const route = useRoute();
 const router = useRouter();
@@ -19,6 +24,11 @@ const userPrompt = computed(() => {
   const raw = value?.user_prompt;
   return typeof raw === "string" ? raw : "-";
 });
+
+// 3=失败 4=已取消（与后端 BookGenTaskStatus 一致）
+const canRetry = computed(
+  () => task.value && (task.value.status === 3 || task.value.status === 4),
+);
 
 async function load() {
   if (!Number.isFinite(id.value)) return;
@@ -58,6 +68,28 @@ async function handleCancel() {
   }
 }
 
+const retrying = ref(false);
+async function handleRetry() {
+  if (!task.value) return;
+  retrying.value = true;
+  try {
+    const res = await retryBookGenTaskApi(task.value.id);
+    ElMessage.success("已创建新的生成任务");
+    if (res?.task_id && res.task_id !== task.value.id) {
+      await router.replace({
+        name: "OpsGenTaskDetail",
+        params: { id: String(res.task_id) },
+      });
+    } else {
+      await load();
+    }
+  } catch {
+    ElMessage.error("重新生成失败");
+  } finally {
+    retrying.value = false;
+  }
+}
+
 watch(
   () => route.params.id,
   () => load(),
@@ -73,6 +105,17 @@ watch(
         <div class="flex items-center justify-between">
           <span>任务详情</span>
           <div class="space-x-2">
+            <el-popconfirm
+              v-if="canRetry"
+              title="将使用本任务保存的生成参数，为该用户重新创建一条生成任务。是否继续？"
+              confirm-button-text="确定"
+              cancel-button-text="取消"
+              @confirm="handleRetry"
+            >
+              <template #reference>
+                <el-button :loading="retrying" type="primary"> 重新生成 </el-button>
+              </template>
+            </el-popconfirm>
             <el-button
               v-if="task.status === 0 || task.status === 1"
               type="warning"

@@ -16,6 +16,7 @@ const routes: RouteRecordRaw[] = [
         "book:recommend_write",
         "book:category_list",
         "book:category_write",
+        "book:generate",
         "task:list",
         "task:detail",
         "feedback:list",
@@ -75,6 +76,16 @@ const routes: RouteRecordRaw[] = [
           authority: ["book:category_list"],
           icon: "lucide:tags",
           title: "绘本分类",
+        },
+      },
+      {
+        name: "OpsBookGenerate",
+        path: "/ops/books/generate",
+        component: () => import("#/views/ops/book/generate.vue"),
+        meta: {
+          authority: ["book:generate"],
+          icon: "lucide:wand-2",
+          title: "生成绘本",
         },
       },
       {
