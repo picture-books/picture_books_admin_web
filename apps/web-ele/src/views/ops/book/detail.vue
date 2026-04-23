@@ -138,10 +138,11 @@ watch(
 .book-detail__thumb {
   width: 48px;
   height: 48px;
-  border-radius: 4px;
-  cursor: zoom-in;
   vertical-align: middle;
+  cursor: zoom-in;
+  border-radius: 4px;
 }
+
 .book-detail__thumb--lg {
   width: 120px;
   height: 120px;

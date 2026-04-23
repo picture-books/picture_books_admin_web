@@ -31,13 +31,9 @@ const form = reactive<AdminCreateBookBody>({
   user_prompt: "",
 });
 
-const needVisual = computed(
-  () => form.experience_mode === 1 || form.experience_mode === 3,
-);
+const needVisual = computed(() => form.experience_mode === 1 || form.experience_mode === 3);
 
-const themeOptions = computed(() =>
-  categories.value.filter((c) => c.enabled).map((c) => c.name),
-);
+const themeOptions = computed(() => categories.value.filter((c) => c.enabled).map((c) => c.name));
 
 watch(
   () => form.experience_mode,
@@ -91,12 +87,14 @@ async function submit() {
     ElMessage.warning("请选择故事主题");
     return;
   }
-  if (needVisual.value) {
-    if (!form.illustration_style?.trim() || !form.color_style?.trim() || !form.visual_mood?.trim()) {
+  if (needVisual.value && (
+      !form.illustration_style?.trim() ||
+      !form.color_style?.trim() ||
+      !form.visual_mood?.trim()
+    )) {
       ElMessage.warning("纯阅读/普通模式需填写画风、色彩与氛围");
       return;
     }
-  }
   submitting.value = true;
   try {
     const res = await postAdminGenerateBookApi({ ...form });
@@ -119,13 +117,10 @@ async function submit() {
 
 <template>
   <div v-loading="loading" class="p-5">
-    <el-page-header
-      class="mb-4"
-      content="生成绘本"
-      @back="router.push({ name: 'OpsBooks' })"
-    />
+    <el-page-header class="mb-4" content="生成绘本" @back="router.push({ name: 'OpsBooks' })" />
     <p class="mb-4 text-sm opacity-80">
-      参数与 App 端一致，绘本将归属到所填的 App 用户；可从「App 用户详情」以 `?user_id=` 带参打开本页。
+      参数与 App 端一致，绘本将归属到所填的 App 用户；可从「App 用户详情」以 `?user_id=`
+      带参打开本页。
     </p>
     <el-card shadow="never" class="max-w-3xl">
       <el-form label-width="140px" @submit.prevent="submit">
@@ -151,33 +146,17 @@ async function submit() {
             filterable
             placeholder="从已启用分类选择"
           >
-            <el-option
-              v-for="name in themeOptions"
-              :key="name"
-              :label="name"
-              :value="name"
-            />
+            <el-option v-for="name in themeOptions" :key="name" :label="name" :value="name" />
           </el-select>
         </el-form-item>
         <el-form-item label="页数" required>
-          <el-input-number
-            v-model="form.pages"
-            :min="1"
-            :max="30"
-            controls-position="right"
-          />
+          <el-input-number v-model="form.pages" :min="1" :max="30" controls-position="right" />
         </el-form-item>
         <el-form-item label="体验模式" required>
           <el-select v-model="form.experience_mode" class="w-full max-w-md">
             <el-option :value="1" label="纯阅读（插图+文案，需画风）" />
-            <el-option
-              :value="2"
-              label="纯听（不生成插图，画风可不填）"
-            />
-            <el-option
-              :value="3"
-              label="普通（插图+文案+预留听读，需画风）"
-            />
+            <el-option :value="2" label="纯听（不生成插图，画风可不填）" />
+            <el-option :value="3" label="普通（插图+文案+预留听读，需画风）" />
           </el-select>
         </el-form-item>
         <el-form-item label="主角名" required>
@@ -187,18 +166,10 @@ async function submit() {
           <el-input v-model="form.main_character_type" placeholder="如 小兔子" />
         </el-form-item>
         <el-form-item label="外观" required>
-          <el-input
-            v-model="form.main_character_appearance"
-            type="textarea"
-            :rows="2"
-          />
+          <el-input v-model="form.main_character_appearance" type="textarea" :rows="2" />
         </el-form-item>
         <el-form-item label="性格" required>
-          <el-input
-            v-model="form.main_character_personality"
-            type="textarea"
-            :rows="2"
-          />
+          <el-input v-model="form.main_character_personality" type="textarea" :rows="2" />
         </el-form-item>
         <template v-if="needVisual">
           <el-form-item label="画风" required>

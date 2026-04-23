@@ -26,9 +26,7 @@ const userPrompt = computed(() => {
 });
 
 // 3=失败 4=已取消（与后端 BookGenTaskStatus 一致）
-const canRetry = computed(
-  () => task.value && (task.value.status === 3 || task.value.status === 4),
-);
+const canRetry = computed(() => task.value && (task.value.status === 3 || task.value.status === 4));
 
 async function load() {
   if (!Number.isFinite(id.value)) return;
@@ -75,14 +73,10 @@ async function handleRetry() {
   try {
     const res = await retryBookGenTaskApi(task.value.id);
     ElMessage.success("已创建新的生成任务");
-    if (res?.task_id && res.task_id !== task.value.id) {
-      await router.replace({
+    await (res?.task_id && res.task_id !== task.value.id ? router.replace({
         name: "OpsGenTaskDetail",
         params: { id: String(res.task_id) },
-      });
-    } else {
-      await load();
-    }
+      }) : load());
   } catch {
     ElMessage.error("重新生成失败");
   } finally {

@@ -25,7 +25,7 @@
 | 绘本                 | `/ops/books`            | `apps/web-ele/src/views/ops/book/`                                                                           |
 | 热门推荐             | `/ops/books/recommend`  | `apps/web-ele/src/views/ops/book/recommend.vue`                                                              |
 | 绘本分类             | `/ops/books/categories` | `apps/web-ele/src/views/ops/book/categories.vue`                                                             |
-| 生成绘本（代用户）   | `/ops/books/generate`  | `apps/web-ele/src/views/ops/book/generate.vue`（与 C 端 `POST /api/v1/books` 同参 + `author_id`）                 |
+| 生成绘本（代用户）   | `/ops/books/generate`   | `apps/web-ele/src/views/ops/book/generate.vue`（与 C 端 `POST /api/v1/books` 同参 + `author_id`）            |
 | 生成任务             | `/ops/book-gen-tasks`   | `apps/web-ele/src/views/ops/task/`                                                                           |
 | 意见反馈             | `/ops/feedbacks`        | `apps/web-ele/src/views/ops/feedback/`（列表 `list.vue`、详情 `detail.vue`）                                 |
 | 管理员 / 角色 / 权限 | `/system/...`           | `apps/web-ele/src/views/system/`                                                                             |

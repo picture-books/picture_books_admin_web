@@ -382,7 +382,7 @@ onMounted(load);
             v-model="form.extra"
             type="textarea"
             :rows="3"
-            placeholder='文生图 extra：内页 per_page|grid 与 openai 参数多在此配。示例：{"page_illustration_mode":"per_page","openai_image":{"size":"1024x1024","response_format":"b64_json","quality":""}}；多宫格将 page_illustration_mode 改为 grid 并可配 grid_rows|cols。default_config 不写内页版式。详见 picture_books_backend README。'
+            placeholder="文生图 extra：内页 per_page|grid 与 openai 参数多在此配。示例：{&quot;page_illustration_mode&quot;:&quot;per_page&quot;,&quot;openai_image&quot;:{&quot;size&quot;:&quot;1024x1024&quot;,&quot;response_format&quot;:&quot;b64_json&quot;,&quot;quality&quot;:&quot;&quot;}}；多宫格将 page_illustration_mode 改为 grid 并可配 grid_rows|cols。default_config 不写内页版式。详见 picture_books_backend README。"
           />
         </el-form-item>
         <el-form-item label="启用">
