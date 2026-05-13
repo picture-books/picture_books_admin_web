@@ -85,7 +85,8 @@ onMounted(load);
   <div class="p-5">
     <el-card v-loading="loading" shadow="never" header="豆包语音合成（纯听绘本）">
       <p class="mb-4 text-sm text-gray-600">
-        配置写入业务库并与配置文件合并；Worker 每次纯听任务会读取最新合并结果。密钥不会在列表中回显，仅显示是否已配置。
+        配置写入业务库并与配置文件合并；Worker
+        每次纯听任务会读取最新合并结果。密钥不会在列表中回显，仅显示是否已配置。
       </p>
       <el-form label-width="180px" style="max-width: 640px">
         <el-form-item label="AppID">
@@ -96,7 +97,11 @@ onMounted(load);
             v-model="form.access_key"
             type="password"
             show-password
-            :placeholder="form.access_key_set ? '已配置，留空则不修改' : '未配置时必填（保存前请确保其他字段已填）'"
+            :placeholder="
+              form.access_key_set
+                ? '已配置，留空则不修改'
+                : '未配置时必填（保存前请确保其他字段已填）'
+            "
             clearable
           />
         </el-form-item>
@@ -104,16 +109,30 @@ onMounted(load);
           <el-input v-model="form.resource_id" placeholder="如 seed-tts-2.0" clearable />
         </el-form-item>
         <el-form-item label="Speaker（voice_type）">
-          <el-input v-model="form.speaker" placeholder="与 ResourceID 同属豆包文档同一模型分表" clearable />
+          <el-input
+            v-model="form.speaker"
+            placeholder="与 ResourceID 同属豆包文档同一模型分表"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="BaseURL（可选）">
           <el-input v-model="form.base_url" placeholder="默认可空，使用 SDK 默认域名" clearable />
         </el-form-item>
         <el-form-item label="轮询间隔（毫秒）">
-          <el-input-number v-model="form.poll_every_ms" :min="100" :max="60_000" controls-position="right" />
+          <el-input-number
+            v-model="form.poll_every_ms"
+            :min="100"
+            :max="60_000"
+            controls-position="right"
+          />
         </el-form-item>
         <el-form-item label="查询超时（秒）">
-          <el-input-number v-model="form.query_timeout_sec" :min="60" :max="7200" controls-position="right" />
+          <el-input-number
+            v-model="form.query_timeout_sec"
+            :min="60"
+            :max="7200"
+            controls-position="right"
+          />
         </el-form-item>
       </el-form>
       <el-button
