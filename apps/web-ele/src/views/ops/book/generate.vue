@@ -20,6 +20,7 @@ const form = reactive<AdminCreateBookBody>({
   age: "3-6岁",
   theme: "",
   pages: 8,
+  listen_story_scale: 2,
   experience_mode: 3,
   main_character_name: "",
   main_character_type: "",
@@ -32,6 +33,7 @@ const form = reactive<AdminCreateBookBody>({
 });
 
 const needVisual = computed(() => form.experience_mode === 1 || form.experience_mode === 3);
+const isListen = computed(() => form.experience_mode === 2);
 
 const themeOptions = computed(() => categories.value.filter((c) => c.enabled).map((c) => c.name));
 
@@ -94,9 +96,28 @@ async function submit() {
     ElMessage.warning("纯阅读/普通模式需填写画风、色彩与氛围");
     return;
   }
+  if (isListen.value) {
+    const s = Number(form.listen_story_scale);
+    if (!Number.isFinite(s) || s < 1 || s > 3) {
+      ElMessage.warning("纯听模式请选择朗读篇幅（短篇/中篇/长篇）");
+      return;
+    }
+  } else {
+    const p = Number(form.pages);
+    if (!Number.isFinite(p) || p < 1 || p > 30) {
+      ElMessage.warning("请填写有效页数（1～30）");
+      return;
+    }
+  }
   submitting.value = true;
   try {
-    const res = await postAdminGenerateBookApi({ ...form });
+    const payload: AdminCreateBookBody = { ...form };
+    if (isListen.value) {
+      delete payload.pages;
+    } else {
+      delete payload.listen_story_scale;
+    }
+    const res = await postAdminGenerateBookApi(payload);
     ElMessage.success("任务已创建，正在排队生成");
     if (res?.task_id) {
       router.push({
@@ -148,13 +169,23 @@ async function submit() {
             <el-option v-for="name in themeOptions" :key="name" :label="name" :value="name" />
           </el-select>
         </el-form-item>
-        <el-form-item label="页数" required>
+        <el-form-item v-if="!isListen" label="页数" required>
           <el-input-number v-model="form.pages" :min="1" :max="30" controls-position="right" />
+        </el-form-item>
+        <el-form-item v-else label="朗读篇幅" required>
+          <el-select v-model="form.listen_story_scale" class="w-full max-w-md">
+            <el-option :value="1" label="短篇" />
+            <el-option :value="2" label="中篇" />
+            <el-option :value="3" label="长篇" />
+          </el-select>
         </el-form-item>
         <el-form-item label="体验模式" required>
           <el-select v-model="form.experience_mode" class="w-full max-w-md">
             <el-option :value="1" label="纯阅读（插图+文案，需画风）" />
-            <el-option :value="2" label="纯听（不生成插图，画风可不填）" />
+            <el-option
+              :value="2"
+              label="纯听（整篇朗读稿 + 豆包 TTS + 封面；需朗读篇幅，不需页数）"
+            />
             <el-option :value="3" label="普通（插图+文案+预留听读，需画风）" />
           </el-select>
         </el-form-item>

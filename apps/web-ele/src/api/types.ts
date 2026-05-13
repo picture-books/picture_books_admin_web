@@ -59,6 +59,17 @@ export interface DevicePolicy {
   max_devices_default: number;
 }
 
+/** GET/PUT /admin/system/doubao-tts — 纯听豆包 TTS（不返回 access_key 明文） */
+export interface DoubaoTTSAdmin {
+  app_id: string;
+  resource_id: string;
+  speaker: string;
+  base_url: string;
+  poll_every_ms: number;
+  query_timeout_sec: number;
+  access_key_set: boolean;
+}
+
 /** GET /admin/system/bookgen-ai-providers */
 export interface BookgenAIProviderRow {
   id: number;
@@ -216,7 +227,10 @@ export interface AdminCreateBookBody {
   author_id: number;
   age: string;
   theme: string;
-  pages: number;
+  /** 纯阅读(1)/普通(3) 必填；纯听(2) 不传 */
+  pages?: number;
+  /** 纯听(2) 必填 1|2|3；其他模式不传 */
+  listen_story_scale?: number;
   experience_mode: number;
   main_character_name: string;
   main_character_type: string;

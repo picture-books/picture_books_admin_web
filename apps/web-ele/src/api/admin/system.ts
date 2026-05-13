@@ -5,6 +5,7 @@ import type {
   AdminUserRow,
   BookgenAIProviderRow,
   DevicePolicy,
+  DoubaoTTSAdmin,
   PageData,
 } from "#/api/types";
 
@@ -89,6 +90,23 @@ export function updateDevicePolicyApi(max_devices_default: number) {
   return requestClient.put<DevicePolicy>("/system/device-policy", {
     max_devices_default,
   });
+}
+
+export function getDoubaoTtsApi() {
+  return requestClient.get<DoubaoTTSAdmin>("/system/doubao-tts");
+}
+
+export function updateDoubaoTtsApi(body: {
+  app_id: string;
+  base_url: string;
+  poll_every_ms: number;
+  query_timeout_sec: number;
+  resource_id: string;
+  speaker: string;
+  /** 非空则更新密钥；留空表示不修改 */
+  access_key?: string;
+}) {
+  return requestClient.put<DoubaoTTSAdmin>("/system/doubao-tts", body);
 }
 
 export function getAppAboutApi() {

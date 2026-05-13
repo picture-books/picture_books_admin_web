@@ -10,6 +10,7 @@ const routes: RouteRecordRaw[] = [
         "system:device_policy",
         "system:app_about",
         "system:bookgen_ai",
+        "system:doubao_tts",
       ],
       icon: "lucide:settings",
       order: 100,
@@ -46,6 +47,16 @@ const routes: RouteRecordRaw[] = [
           authority: ["system:bookgen_ai"],
           icon: "lucide:sparkles",
           title: "绘本 AI 服务商",
+        },
+      },
+      {
+        name: "SystemDoubaoTts",
+        path: "/system/doubao-tts",
+        component: () => import("#/views/system/doubao-tts/index.vue"),
+        meta: {
+          authority: ["system:doubao_tts"],
+          icon: "lucide:mic",
+          title: "豆包语音合成",
         },
       },
       {
