@@ -14,6 +14,21 @@ const loading = ref(false);
 const book = ref<AdminBook | null>(null);
 const id = computed(() => Number(route.params.id));
 
+const experienceModeLabels: Record<number, string> = {
+  1: "纯阅读",
+  2: "纯听",
+  3: "普通",
+};
+
+const isListen = computed(() => book.value?.experience_mode === 2);
+
+function experienceModeLabel(mode: number | undefined): string {
+  if (mode === undefined || mode === null) {
+    return "-";
+  }
+  return experienceModeLabels[mode] ?? String(mode);
+}
+
 /** 封面 + 按页序的内页图，供预览时前后切换 */
 const allBookImagePreviewUrls = computed(() => {
   const b = book.value;
@@ -86,7 +101,9 @@ watch(
           <el-descriptions-item label="作者">
             {{ book.author?.nickname ?? book.author_id }}
           </el-descriptions-item>
-          <el-descriptions-item label="体验模式">{{ book.experience_mode }}</el-descriptions-item>
+          <el-descriptions-item label="体验模式">
+            {{ experienceModeLabel(book.experience_mode) }}
+          </el-descriptions-item>
           <el-descriptions-item label="年龄段">{{ book.age_group || "-" }}</el-descriptions-item>
           <el-descriptions-item label="主题" :span="2">
             {{ book.theme || "-" }}
@@ -110,11 +127,29 @@ watch(
         </el-descriptions>
       </el-card>
       <el-card class="mt-4" shadow="never">
-        <template #header>页面</template>
+        <template #header>{{ isListen ? "故事正文" : "页面" }}</template>
         <el-table :data="book.pages || []" border size="small">
-          <el-table-column prop="page_num" label="#" width="60" />
-          <el-table-column prop="content" label="正文" min-width="200" show-overflow-tooltip />
-          <el-table-column label="插图" width="100">
+          <el-table-column v-if="!isListen" prop="page_num" label="#" width="60" />
+          <el-table-column
+            prop="content"
+            :label="isListen ? '故事正文' : '正文'"
+            min-width="200"
+            show-overflow-tooltip
+          />
+          <el-table-column v-if="isListen" label="朗读音频" min-width="200">
+            <template #default="scope">
+              <el-link
+                v-if="scope?.row?.audio_url"
+                :href="scope.row.audio_url"
+                target="_blank"
+                type="primary"
+              >
+                打开音频
+              </el-link>
+              <span v-else>-</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="!isListen" label="插图" width="100">
             <template #default="scope">
               <el-image
                 v-if="scope?.row?.image_url"
